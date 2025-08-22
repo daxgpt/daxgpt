@@ -1,11 +1,10 @@
 from flask import Flask, request, jsonify, send_from_directory
 import openai
-import os
 
 app = Flask(__name__, static_folder="static")
 
-# Set your OpenAI API key
-openai.api_key = os.getenv("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")  # or set directly: "sk-..."
+# ⚠️ Your OpenAI API key (keep private!)
+openai.api_key = "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"
 
 # Serve index.html
 @app.route("/")
@@ -20,12 +19,17 @@ def chat():
     if not message:
         return jsonify({"reply": "Please provide a message."})
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": message}],
-        temperature=0.7
-    )
-    reply = response.choices[0].message.content
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": message}],
+            temperature=0.7,
+            request_timeout=30
+        )
+        reply = response.choices[0].message.content
+    except Exception as e:
+        reply = f"Error: {str(e)}"
+
     return jsonify({"reply": reply})
 
 # Generate Website
@@ -35,13 +39,17 @@ def generate_site():
     idea = data.get("idea", "")
     prompt = f"Create a complete HTML/CSS/JS website for this idea:\n{idea}\nReturn only the code inside a code block."
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            request_timeout=60
+        )
+        code = response.choices[0].message.content
+    except Exception as e:
+        code = f"Error: {str(e)}"
 
-    code = response.choices[0].message.content
     return jsonify({"code": code})
 
 # Generate Discord Bot
@@ -51,13 +59,17 @@ def generate_bot():
     idea = data.get("idea", "")
     prompt = f"Create a Discord bot using Python (discord.py) for this task:\n{idea}\nReturn only the Python code."
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            request_timeout=60
+        )
+        bot_code = response.choices[0].message.content
+    except Exception as e:
+        bot_code = f"Error: {str(e)}"
 
-    bot_code = response.choices[0].message.content
     return jsonify({"bot_code": bot_code})
 
 # Generate Any Code
@@ -67,13 +79,17 @@ def generate_any_code():
     idea = data.get("idea", "")
     prompt = f"Write code for the following task:\n{idea}\nReturn only the code."
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            request_timeout=60
+        )
+        code = response.choices[0].message.content
+    except Exception as e:
+        code = f"Error: {str(e)}"
 
-    code = response.choices[0].message.content
     return jsonify({"code": code})
 
 if __name__ == "__main__":
