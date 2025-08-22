@@ -1,78 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DaxAI Chatbot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DaxGPT</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #222;
+      background: #111;
       color: #eee;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       height: 100vh;
-      margin: 0;
+    }
+    header {
+      background: #222;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #0ff;
     }
     #chat {
       flex: 1;
-      padding: 20px;
+      padding: 15px;
       overflow-y: auto;
-      border-bottom: 2px solid #444;
     }
     .message {
-      margin-bottom: 15px;
-      max-width: 70%;
-      padding: 10px 15px;
-      border-radius: 15px;
-      clear: both;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 75%;
     }
     .user {
-      background: #0b93f6;
-      color: white;
-      float: right;
-      text-align: right;
+      background: #0ff2;
+      align-self: flex-end;
     }
     .bot {
-      background: #444;
-      float: left;
-      color: #eee;
+      background: #333;
+      color: #0ff;
+      align-self: flex-start;
     }
-    #inputArea {
+    #input-area {
       display: flex;
-      padding: 10px 20px;
-      background: #111;
+      padding: 10px;
+      background: #222;
     }
-    #userInput {
+    #input-area input {
       flex: 1;
       padding: 10px;
-      font-size: 16px;
-      border-radius: 10px;
       border: none;
-      outline: none;
+      border-radius: 5px;
+      font-size: 1em;
     }
-    #sendBtn {
-      padding: 10px 20px;
+    #input-area button {
       margin-left: 10px;
-      background: #0b93f6;
+      padding: 10px 15px;
       border: none;
-      color: white;
+      border-radius: 5px;
+      background: #0ff;
+      color: #111;
       font-weight: bold;
       cursor: pointer;
-      border-radius: 10px;
-    }
-    #sendBtn:hover {
-      background: #0a82d1;
     }
   </style>
 </head>
 <body>
-
+  <header>DaxGPT</header>
   <div id="chat"></div>
-
-  <form id="inputArea">
-    <input id="userInput" autocomplete="off" placeholder="Ask me anything..." />
-    <button type="submit" id="sendBtn">Send</button>
-  </form>
+  <div id="input-area">
+    <input type="text" id="userInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
   <script>
+    const chat = document.getElementById("chat");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.className = "message " + sender;
+      msg.innerText = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+
+      // Fake bot reply (static for GitHub Pages)
+      setTimeout(() => {
+        addMessage("🤖 DaxGPT says: " + randomReply(), "bot");
+      }, 700);
+    }
+
+    function randomReply() {
+      const replies = [
+        "Hello there! 👋",
+        "I’m just a static bot right now.",
+        "Deploy me with a backend to make me real! 🚀",
+        "GitHub Pages only serves HTML/JS.",
+        "Ask me anything (but answers are random 😉)."
+      ];
+      return replies[Math.floor(Math.random() * replies.length)];
+    }
+  </script>
+</body>
+</html>
